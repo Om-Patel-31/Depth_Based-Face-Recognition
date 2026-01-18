@@ -24,7 +24,6 @@ class VideoWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Depth Face ID")
-        self.showFullScreen()
 
         # Core components
         # Balanced clarity and speed; drop to 424x240 for ~30fps when FAST_MODE
@@ -43,7 +42,7 @@ class VideoWindow(QtWidgets.QMainWindow):
         self.video_label = QtWidgets.QLabel()
         self.video_label.setAlignment(QtCore.Qt.AlignCenter)
         self.video_label.setStyleSheet("background-color: #0e1116; border: 1px solid #1f252d;")
-        self.video_label.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.video_label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 
         self.status_label = QtWidgets.QLabel("Status: Ready")
         self.status_label.setStyleSheet("color: #cfd8e3; font-size: 13px;")
@@ -83,6 +82,12 @@ class VideoWindow(QtWidgets.QMainWindow):
         layout.addWidget(self.video_label, stretch=6)
         layout.addLayout(side_panel, stretch=1)
         self.setCentralWidget(container)
+
+        # Set fixed window size based on video stream
+        video_height = 240 if FAST_MODE else 360
+        video_width = 424 if FAST_MODE else 640
+        side_panel_width = 150
+        self.setFixedSize(video_width + side_panel_width, video_height)
 
         # Timer for video refresh
         self.timer = QtCore.QTimer()
